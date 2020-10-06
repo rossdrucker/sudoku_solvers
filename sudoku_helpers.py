@@ -28,7 +28,6 @@ def check_square(n):
             print(f'{n} is not a real number\n')
             n = int(input('Select a size for the board: '))
     
-
 def create_blank_board(size = 9, speak = False):
     """
     Function to create a blank board of size n x n. Since a standard
@@ -42,6 +41,16 @@ def create_blank_board(size = 9, speak = False):
     the constraint m^2 = n, and m and n must both be integer numbers
     (i.e. the size n must be a perfect square).
     """
+    
+    # Check that we will have a viable number of characters (less than 61)
+    valid_size = False
+    while not valid_size:
+        if size > 61:
+            print(f'{size} is too big to make a board\n')
+            size = int(input('Select different size board: '))
+        else:
+            valid_size = True
+            
     # Assume the board desired is not valid
     valid_size = False
     
@@ -57,25 +66,85 @@ def create_blank_board(size = 9, speak = False):
             # If not, prompt user to input a new board size. Must be an int
             try:
                 print(f'{size} is not a viable board size\n')
-                size = int(input("Select different size board: "))
+                size = int(input('Select different size board: '))
             except ValueError:
                 # If user enters something other than an int, alert user and
                 # require different size to be supplied
                 print(f'{size} is not a number.\n')
-                size = int(input("Select different size board: "))
+                size = int(input('Select different size board: '))
             except TypeError:
                 # If something other than an int is supplied at the onset,
                 # alert user and require different size to be supplied
                 print(f'{size} is not a number.\n')
-                size = int(input("Select different size board: "))
+                size = int(input('Select different size board: '))
             
     # Create a board if 
     board = [[0] * size] * size
     
     return board
 
+def get_characters_to_use(size = 9):
+    """
+    Function to get characters that will be used in gameplay
+    """
+    valid_size = False
+    
+    while not valid_size:
+        if size > 61:
+            valid_size = False
+            print(f'{size} is too big. oard cannot be bigger than 61x61')
+            size = int(input('Select different size board: '))
+        else:
+            valid_size = True
+    
+    # If the size of the board is less than 10, get the numbers 1-9
+    if size <= 9:
+        i = 0
+        chars = []
+        while i < size:
+            chars.append(chr(49 + i))
+            i += 1
+    
+    # If the size of the board is bigger than 9 and less than 35, add the
+    # capital letters to fill the remaining necessary possible characters
+    if size >= 9 and size <= 35:
+        i = 0
+        chars = []
+        while i < 9:
+            chars.append(chr(49 + i))
+            i += 1
+            
+        i = 0
+        while len(chars) != size and i <= 25:
+            chars.append(chr(65 + i))
+            i += 1
+            
+    # If the size of the board is bigger than 35 and less than 51, add the
+    # lower case letters to fill the remaining necessary possible characters
+    if size >= 35 and size <= 61:
+        i = 0
+        chars = []
+        while i < 9:
+            chars.append(chr(49 + i))
+            i += 1
+            
+        i = 0
+        while i <= 25:
+            chars.append(chr(65 + i))
+            i += 1
+        
+        i = 0
+        while len(chars) != size and i <= 25:
+            chars.append(chr(97 + i))
+            i += 1
+    
+    return chars
+
 if __name__ == '__main__':
-    # Module testing
+    # Module checks
     create_blank_board()
     create_blank_board(8)
     create_blank_board('a')
+    get_characters_to_use()
+    get_characters_to_use(25)
+    get_characters_to_use(61)
